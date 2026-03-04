@@ -12,5 +12,8 @@
     "@nuxt/content": "^3.11.2",
     "better-sqlite3": "^12.6.2",
     "nuxt": "^4.3.1"
+  },
+  "devDependencies": {
+    "vite-tsconfig-paths": "^6.1.1"
   }
 }
