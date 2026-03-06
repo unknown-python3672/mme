@@ -3,8 +3,8 @@
     <h1>Welcome</h1>
     <p>Log in to purchase your own textbooks</p>
     <form class="login-form" @submit.prevent="handleLogin">
-      <input type="text" placeholder="Username" v-model="username" required />
-      <input type="email" placeholder="Email" v-model="email" required />
+      <input type="text" placeholder="Full name" v-model="username" required />
+      <input type="number" placeholder="Phone number" v-model="email" required />
       <input type="password" placeholder="Password" v-model="password" />
       <button type="submit" @click="submit">Sign up</button> 
     </form>

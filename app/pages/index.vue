@@ -3,7 +3,7 @@
     <h1>Welcome</h1>
     <p>Log in to purchase your own textbooks</p>
     <form class="login-form" @submit.prevent="submit">
-      <input type="text" placeholder="Username" v-model="username" required />
+      <input type="text" placeholder="REG no: 202515341412" v-model="username" required />
       <input type="password" placeholder="Password" v-model="password" />
       <button type="submit">Log In</button>
       <NuxtLink to="/create-account" class="acc">Create account</NuxtLink>     
