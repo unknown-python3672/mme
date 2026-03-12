@@ -1,5 +1,4 @@
-<template>
-    <Navbar />
+<template>      
   <NuxtRouteAnnouncer />
   <NuxtPage />
 </template>

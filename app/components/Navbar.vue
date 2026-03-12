@@ -17,16 +17,17 @@
         <NuxtLink to="/team" @click="closeMenu">Team</NuxtLink>
       </li>
 
+    <li>
+    <button class="menu-btn" @click="toggleMenu">
+      ☰
+    </button>
+    </li>
       <li>
         <button class="contact-btn" @click="contactClick">
           Contact
         </button>
       </li>
     </ul>
-
-    <button class="menu-btn" @click="toggleMenu">
-      ☰
-    </button>
   </nav>
 </template>
 
@@ -58,7 +59,7 @@ function contactClick() {
   background: #111;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between;  
   padding: 0 25px;
   z-index: 1000;
 }
@@ -90,9 +91,12 @@ function contactClick() {
 .contact-btn {
   background: #00ff99;
   border: none;
-  padding: 8px 16px;
+  padding: 10px;
   border-radius: 20px;
-  cursor: pointer;
+  cursor: pointer; 
+  width: 100px;
+  position: absolute;
+  left:  90%;
 }
 
 .menu-btn {
