@@ -1,6 +1,6 @@
-<Navbar />
+<Navbar /> 
 <template>
-  <div>
+<div>
     <div class="parent">
       <h1 class="welcome">Welcome to MME</h1>
       <p>Purchase several textbooks easily, fast, and online from the comfort of your home.</p>
@@ -52,40 +52,53 @@
 </script>
 
 <style scoped>
+template{
+  background-color: #00153e;
+}
+
 .book1{
    border-radius: 5px;
    position: relative;
    display: inline-block;
    overflow: hidden;
+   background: white;
+   box-shadow: 0 4px 12px rgba(0,0,0.08);
+   transition: transform 0 .25s ease, box-shadow 0.25s ease;
 }
 .hidden{
   position: absolute;
   bottom: 50%;
   right: -100%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.6);
+  transform: translateY(100%);
+  background: rgba(0,0,0,0.75);
   color: white;
-  padding: 10px 20px;
+  padding: 6px 14px;
   opacity: 0;
-  transition: all 0.4s ease;         
+  border-radius: 20px;
+  transition: transform 0.43s ease, opacity 0.35s ease;         
   z-index: 2;
 }
 .book1:hover .hidden{
   right: 0;
+  transform: translateX(-10px);
   opacity: 1;
 }
 
 .book1 img{
      display: block;
   border-radius: 5px;
-  max-width: 100%;
+  width: 100%;
   transition: transform 0.3s ease;
 }
 
 .book1:hover img{
-  transform: scale(1.05);
+  transform: scale(1.08);
+  box-shadow: 0 10px 25px rgba(0,0,0, 0.15);
 }
 
+.book1:hover{
+  transform: translateY(-10px);
+}
 
 .parent{
    position: relative;
@@ -99,7 +112,7 @@ h1{
    color: rgb(2, 142, 2);
 }
 .row{
-   margin: 20px;
+   margin: 20px auto;
    padding-top: 30px;
    align-items:  center;
    justify-content: space-evenly;
