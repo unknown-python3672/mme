@@ -1,4 +1,5 @@
 <template>
+  <Navbar />
   <div class="login-page">
     <h1>Welcome</h1>
     <p>Log in to purchase your own textbooks</p>
