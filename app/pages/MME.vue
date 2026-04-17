@@ -1,5 +1,6 @@
 <Navbar /> 
 <template>
+<PaymentModal v-model="isPaymentModalOpen" />
 <div>
     <div class="parent">
       <h1 class="welcome">Welcome to MME</h1>
@@ -52,9 +53,16 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import PaymentModal from '../components/PaymentModal.vue'
+import { provide, ref } from 'vue'
 
-const openPaymentModal = inject('openPaymentModal');
+const isPaymentModalOpen = ref(false)
+
+const openPaymentModal = () => {
+  console.log("Opening payment modal")
+  isPaymentModalOpen.value = true
+}
+
 </script>
 
 <style scoped>

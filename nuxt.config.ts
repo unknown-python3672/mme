@@ -10,5 +10,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
 
   // 4. Configuration for modules
-  modules: []
+  modules: [],
+
+  // 5. Global CSS and plugins
+  plugins: ['~/plugins/bootstrap.client.ts']
 })
