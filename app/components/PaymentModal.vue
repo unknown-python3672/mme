@@ -5,15 +5,13 @@
         <div ref="modalRef" class="modal">
           <header class="modal-header">
             <h3>Select textbooks to be purchased</h3>
-            <button class="close-btn" @click="close">&times;</button>
           </header>
 
           <form class="form" @submit.prevent="handleSubmit">
             <div class="contact_input_area">
              <div class="form-grid">
-  <div class="field-full">
+<div class="form-group">
     <input v-model="form.fullName" type="text" class="form-control" placeholder="Your Name" required />
-  </div>
 
   <div class="field-half">
     <input v-model="form.matricNo" type="number" class="form-control" placeholder="Matric Number" required />
@@ -26,7 +24,7 @@
   <div class="field-half">
     <input v-model="form.phone" type="text" class="form-control" placeholder="Your Number" required />
   </div>
-
+</div>
   <div class="field-half">
     <select v-model="form.booktype" class="form-control" required>
       <option disabled value="">Choose a book</option>
@@ -39,7 +37,7 @@
 </div>                                                        
 
               <div class="text-center mt-3">
-                <button type="submit" class="btn confer-btn" :disabled="isLoading">
+                <button type="submit" class="classic-btn" :disabled="isLoading" id="slide-text">
                   {{ isLoading ? 'Processing...' : 'Purchase Tickets' }}
                   <i class="zmdi zmdi-long-arrow-right"></i>
                 </button>
@@ -111,7 +109,7 @@ const handleSubmit = () => {
   box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  width: 90%;
+  width: auto;
   max-width: 650px;
   max-height: 90vh;
   overflow-y: auto;
@@ -178,5 +176,70 @@ form {
     justify-content: center;
     padding: 12px 24px;
 }
+select {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    right: 50%;
+    left: 50%;
+    position:relative;
+    transform: translate(-50%);
+
+}
+
+input{
+  width: 70%;
+  color: #333;
+  background: #ffffff;
+  border-bottom: 1px solid #ccc;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0px;
+  outline: none;
+
+}
+
+.contact_input_area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input::placeholder{
+  margin-bottom: 15px;
+  color: rgb(87, 87, 87);outline: none;
+}
+
+.form-group{
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 5px;
+justify-content: center;
+}
+.classic-btn {
+  color: white;
+  border-radius: 0%;
+  width: auto;
+  left: 50%;
+  position: relative;
+  margin: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(to right, white 50%, black 50%);
+  background-size: 200%;
+  background-position: right;
+  border: 2px solid black;
+  transition: background-position 0.4s ease, color 0.4s ease;
+}
+
+.classic-btn:hover {
+  background-position: left;
+  color: black; /* text flips to black when white bg slides in */
+}
 
 </style>
+
+
+the left is significantly higher than the right
