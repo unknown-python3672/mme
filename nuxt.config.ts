@@ -1,17 +1,24 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // 1. Link your global CSS file
-  // Using the alias '~/' is the standard way for Nuxt to find your assets
-
-  // 2. Enable Nuxt Devtools
   devtools: { enabled: true },
 
-  // 3. Set compatibility date
   compatibilityDate: '2024-04-03',
 
-  // 4. Configuration for modules
   modules: [],
 
-  // 5. Global CSS and plugins
-  plugins: ['~/plugins/bootstrap.client.ts']
+  plugins: ['~/plugins/bootstrap.client.ts'],
+
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap'
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap'
+        }
+      ]
+    }
+  }
 })

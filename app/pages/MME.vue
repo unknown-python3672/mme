@@ -1,5 +1,5 @@
-<Navbar /> 
-<template>
+ <template>
+  <Navbar />
 <PaymentModal v-model="isPaymentModalOpen" />
 <div>
     <div class="parent">
@@ -53,6 +53,7 @@
 </template>
 
 <script setup>
+import '../assets/css/main.css';
 import PaymentModal from '../components/PaymentModal.vue'
 import { provide, ref } from 'vue'
 

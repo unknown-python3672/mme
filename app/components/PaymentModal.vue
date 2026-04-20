@@ -221,7 +221,7 @@ justify-content: center;
 }
 .classic-btn {
   color: white;
-  border-radius: 0%;
+  border-radius: 2px;
   width: auto;
   left: 50%;
   position: relative;
