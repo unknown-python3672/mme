@@ -3,9 +3,9 @@
     <h1>Welcome</h1>
     <p>Log in to purchase your own textbooks</p>
     <form class="login-form" @submit.prevent="submit">
-      <input type="text" placeholder="REG no: 202515341412" v-model="username" required />
+      <input type="text" placeholder="REG no: 202515341552" v-model="username" required />
       <input type="password" placeholder="Password" v-model="password" />
-      <button type="submit">Log In</button>
+      <button class="but1" type="submit">Log In</button>
       <NuxtLink to="/create-account" class="acc">Create account</NuxtLink>     
     </form>
   </div>
@@ -30,6 +30,9 @@ if(username.value.trim() ===  "odinakasamson28" && password.value.trim() === "pa
   
 </script>
 
-<style>
-
+<style scoped>
+.but1{ margin: 10px; 
+position: relative;
+padding: 10px;
+}
 </style>

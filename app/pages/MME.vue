@@ -2,11 +2,13 @@
   <Navbar />
 <PaymentModal v-model="isPaymentModalOpen" />
 <div>
+ 
     <div class="parent">
       <h1 class="welcome">Welcome to MME</h1>
       <p>Purchase several textbooks easily, fast, and online from the comfort of your home.</p>
     </div>
     <div class="group-slide">
+     <div class="slider">
       <div class="row">
         <div class="book1">
           <p class="hidden">physics</p>
@@ -25,7 +27,9 @@
           <img src="/yyy.jpg" alt="MATH103" />
         </div>
       </div>
-      
+      </div>
+
+      <div class="slider">
       <div class="row">
          <div class="book1">
           <p class="hidden">math</p>
@@ -43,7 +47,8 @@
           <p class="hidden">english</p>
           <img src="/yyy.jpg" alt="english" />
         </div>
-      </div>
+        </div>
+    </div>
     </div>
   </div>
   <button 

@@ -124,7 +124,10 @@ const handleSubmit = () => {
 }
 
 .modal-header h3 {
-  color: red;
+  color: black;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  font-weight: bold;
   margin: 0;
 }
 
@@ -223,7 +226,8 @@ justify-content: center;
   color: white;
   border-radius: 2px;
   width: auto;
-  left: 50%;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
   position: relative;
   margin: 10px;
   padding: 10px 20px;
@@ -237,6 +241,37 @@ justify-content: center;
 .classic-btn:hover {
   background-position: left;
   color: black; /* text flips to black when white bg slides in */
+}
+@media (max-width: 600px) {
+  .modal {
+    width: 80%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   grid:  none;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+  input{
+    width: 80%;
+  }
+}
+@media (max-width: 400px) {
+  .modal-header h3 {
+    font-size: 1.2rem;
+    width: 80%;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
 }
 
 </style>

@@ -140,6 +140,8 @@ h1{
 img{
    border-radius: 5px;
    max-width: 100%;
+   background: none;
+   object-fit: cover;
 }
 
 .but1{
@@ -159,10 +161,30 @@ img{
 @media (max-width: 600px) {
     .login-page {
         width: 90%;
+        translate: transform(-50, -50);
     }
 }
-@media (max-width: 400px) {
+@media (max-width: 480px) {
     input {
-        width: 60%;
+        width: 50%;
     }
+    .acc {
+        left: 60%;
+    }
+    .slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.book1 {
+  padding: 0px;
+  box-shadow: none;
+  margin: 0;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  margin: 10px;
+  border-radius: 20px;
+}
 }

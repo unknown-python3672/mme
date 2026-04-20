@@ -6,13 +6,14 @@
       <input type="text" placeholder="Full name" v-model="username" required />
       <input type="number" placeholder="Phone number" v-model="email" required />
       <input type="password" placeholder="Password" v-model="password" />
-      <button class ="sign-up"  type="submit" @click="submit">Sign up</button> 
+      <button class ="but1"  type="submit" @click="submit">Sign up</button> 
     </form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import '../assets/css/main.css';
 
 const username = ref('')
 const password = ref('')
