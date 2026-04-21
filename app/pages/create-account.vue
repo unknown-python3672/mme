@@ -6,7 +6,7 @@
       <input type="text" placeholder="Full name" v-model="username" required />
       <input type="number" placeholder="Phone number" v-model="email" required />
       <input type="password" placeholder="Password" v-model="password" />
-      <button class ="but1"  type="submit" @click="submit">Sign up</button> 
+      <button class ="but2"  type="submit" @click="submit">Sign up</button> 
     </form>
   </div>
 </template>

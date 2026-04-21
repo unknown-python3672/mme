@@ -67,6 +67,20 @@ input::placeholder{
     color: white;
     cursor: pointer;
 }
+.but2{
+   color: rgb(255, 255, 255);
+  border-radius: 2px;
+  width: auto;
+  display: block;
+  justify-content: center;
+  position: relative;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-size: 200%;
+  background-color: #007BFF;
+  background-position: right;
+  border: 2px solid #007BFF;
+}
 /*MME STYLYING BEGINNS HERE*/
 
 template{
@@ -126,7 +140,7 @@ template{
 
 h1{
    padding-top: 5px;
-   color: rgb(2, 142, 2);
+   color: #007BFF;
 }
 .row{
    margin: 20px auto;
@@ -158,6 +172,36 @@ img{
   border: 2px solid #007BFF;
 }
 
+h2{
+  position: relative;
+  margin: 10px auto;
+  transform: translate(0, -50%);
+  text-align: center;
+}
+
+.note{
+  background-color: #007BFF;
+  position: relative;
+  color: white;
+  align-items: center;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.616);
+  padding: 20px;
+  margin: 20px auto;
+  width: 90%;
+}
+
+spam{
+  background-color: #3496ff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid white;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+
 @media (max-width: 600px) {
     .login-page {
         width: 90%;
@@ -167,24 +211,28 @@ img{
 @media (max-width: 480px) {
     input {
         width: 50%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        left: 50%;
     }
     .acc {
         left: 60%;
     }
     .slider {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
+          display: flex;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          -webkit-overflow-scrolling: touch;
+    } 
+    .book1 {
+       padding: 0px;
+          box-shadow: none;
+          margin: 0;
+          flex: 0 0 auto;
+          scroll-snap-align: start;
+          margin: 10px;
+          border-radius: 20px;
 }
 
-.book1 {
-  padding: 0px;
-  box-shadow: none;
-  margin: 0;
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-  margin: 10px;
-  border-radius: 20px;
-}
 }

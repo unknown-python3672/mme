@@ -1,6 +1,6 @@
 <template>
   <PaymentModal v-model="isPaymentModalOpen" />
-  <nav>
+  <nav ref="nav">
     <div class="nav-inner">
       <!-- Title -->
       <div class="title">METAL AND METALLURGICAL ENGINEERING</div>
@@ -32,8 +32,10 @@
 nav {
   width: 100%;
   background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.525);
   position: relative;
+  z-index: 1;
+  border_radius: 20px;
 }
 
 .nav-inner {
@@ -41,6 +43,8 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
+  transform: translateY(0);
+  transition: 0.1 ease;
 }
 
 
@@ -195,4 +199,22 @@ const openPaymentModal = () => {
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
 }
+
+const nav = ref(null)
+
+const handleScroll = () => {
+  const scrollY = window.scrollY
+
+  if (nav.value) {
+    nav.value.style.transform = `translateY(${scrollY * 0.5}px)`
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
