@@ -1,34 +1,59 @@
 <template>
   <div class="login-page">
     <h1>Welcome</h1>
-    <p>Log in to purchase your own textbooks</p>
-    <form class="login-form" @submit.prevent="handleLogin">
-      <input type="text" placeholder="Full name" v-model="username" required />
-      <input type="number" placeholder="Phone number" v-model="email" required />
-      <input type="password" placeholder="Password" v-model="password" />
-      <button class ="but2"  type="submit" @click="submit">Sign up</button> 
+    <p>Create your account to purchase your own textbooks</p>
+    <form class="login-form" @submit.prevent="handleRegister">
+      <input type="text" placeholder="Full name" v-model="name" required />
+      <input type="email" placeholder="Email" v-model="email" required />
+      <input type="text" placeholder="Matric number" v-model="matricNumber" required />
+      <input type="password" placeholder="Password" v-model="password" required />
+
+      <p v-if="errorMessage" style="color: red; font-size: 14px;">{{ errorMessage }}</p>
+      <p v-if="successMessage" style="color: green; font-size: 14px;">{{ successMessage }}</p>
+
+      <button class="but2" type="submit" :disabled="loading">
+        {{ loading ? 'Creating account...' : 'Sign up' }}
+      </button>
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import '../assets/css/main.css';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { registerUser } from '~/services/authService.js'
 
-const username = ref('')
+const router = useRouter()
+
+const name = ref('')
+const email = ref('')
+const matricNumber = ref('')
 const password = ref('')
+const loading = ref(false)
+const errorMessage = ref('')
+const successMessage = ref('')
 
-const submit = () => {
-  if(username.value.trim() ===  "odinakasamson28" && password.value.trim() === "password123"){
-    navigateTo('/MME')
-  }
-    else{
-       alert("access denied")
-    }
-  }
+const handleRegister = async () => {
+  loading.value = true
+  errorMessage.value = ''
+  successMessage.value = ''
 
-const handleLogin = () => {
-  console.log(username.value, password.value)
+  try {
+    await registerUser({
+      name: name.value,
+      email: email.value,
+      matricNumber: matricNumber.value,
+      password: password.value
+    })
+
+    successMessage.value = 'Account created successfully! Redirecting to login...'
+    setTimeout(() => router.push('/'), 2000)
+
+  } catch (error) {
+    errorMessage.value = error.response?.data || error.message|| 'Something went wrong'
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
