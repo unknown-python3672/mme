@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api',
+    baseURL: process.env.NODE_ENV === 'production' 
+        ? 'https://mme-backend-ase4.onrender.com/api'
+        : 'http://localhost:8080/api',
     headers: {
         'Content-Type': 'application/json'
     }
