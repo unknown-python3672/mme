@@ -33,7 +33,35 @@ const loading = ref(false)
 const errorMessage = ref('')
 const successMessage = ref('')
 
+const validateForm = () => {
+    // matric number regex
+    const matricRegex = /^(202[0-9]|20[3-9][0-9])\d{7}$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (!name.value || name.value.trim().length < 2) {
+        errorMessage.value = 'Name must be at least 2 characters'
+        return false
+    }
+    if (!emailRegex.test(email.value)) {
+        errorMessage.value = 'Invalid email format'
+        return false
+    }
+    if (!matricRegex.test(matricNumber.value)) {
+        errorMessage.value = 'Matric number must be 10 digits starting with your admission year'
+        return false
+    }
+    if (!password.value || password.value.length < 8) {
+        errorMessage.value = 'Password must be at least 8 characters'
+        return false
+    }
+    return true
+}
+
 const handleRegister = async () => {
+  errorMessage.value = ''
+  if (!validateForm()) {
+    return
+  } 
   loading.value = true
   errorMessage.value = ''
   successMessage.value = ''
@@ -55,9 +83,11 @@ const handleRegister = async () => {
     loading.value = false
   }
 }
+
+
 </script>
 
-<style>
+<style scoped>
 .sign-up {
   background-color: rgb(15, 77, 15);
   position: absolute;
@@ -67,5 +97,18 @@ const handleRegister = async () => {
   border: 1px solid black;
   width: 100px;
   height: 40px;
+}
+
+.login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  background-color: #eae9e9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.404);
+  justify-content:space-around;
+  padding:15px;
+  border-radius: 8px;
 }
 </style>
