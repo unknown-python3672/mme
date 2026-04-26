@@ -5,40 +5,35 @@
     <form class="login-form" @submit.prevent="handleLogin">
       <input type="email" placeholder="Your email" v-model="email" required />
       <input type="password" placeholder="Password" v-model="password" />
+      
+      <p v-if="errorMessage" style="color: red; font-size: 14px;">{{ errorMessage }}</p>
+
       <button class="but2" type="submit">{{ loading ? 'Logging in...' : 'Log In' }}</button>
-      </form>
-     <NuxtLink to="/create-account" class="acc">Create account</NuxtLink>  
-     
+    </form>
+    <NuxtLink to="/create-account" class="acc">Create account</NuxtLink>  
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import{ loginUser } from '~/services/authService.js'
+import { loginUser } from '~/services/authService.js'
 
 const email = ref('')
 const password = ref('')
-const loading  = ref(false)
+const loading = ref(false)
 const errorMessage = ref('')
 
 const handleLogin = async () => {
-
-  console.log('Sending:', {
-  email: email.value,
-  password: password.value
-})
-
   loading.value = true
   errorMessage.value = ''
 
   try {
-     const { token } = await loginUser({
+    const data = await loginUser({
       email: email.value,
       password: password.value
     })
-    localStorage.setItem('token', token)
 
+    localStorage.setItem('token', data.accessToken)
     navigateTo('/MME')
 
   } catch (error) {
