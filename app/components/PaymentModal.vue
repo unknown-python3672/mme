@@ -28,31 +28,38 @@
 
                 <div class="field-half multiselect-wrapper">
                   <div class="multiselect-box" @click="toggleDropdown">
-                    <span v-if="form.booktype.length === 0" class="multiselect-placeholder">Choose books</span>
-                    <span v-for="book in form.booktype" :key="book" class="multiselect-tag">
-                      {{ book }}
+                    <span v-if="form.selectedBooks.length === 0" class="multiselect-placeholder">Choose books</span>
+                    <span v-for="book in form.selectedBooks" :key="book.id" class="multiselect-tag">
+                      {{ book.title }}
                       <button type="button" @click.stop="removeBook(book)">✕</button>
                     </span>
                     <span class="multiselect-chevron">{{ dropdownOpen ? '▲' : '▼' }}</span>
                   </div>
+
                   <div v-if="dropdownOpen" class="multiselect-dropdown">
                     <div
-                      v-for="option in bookOptions"
-                      :key="option"
+                      v-for="book in bookOptions"
+                      :key="book.id"
                       class="multiselect-option"
-                      :class="{ selected: form.booktype.includes(option) }"
-                      @click.stop="toggleBook(option)"
+                      :class="{ selected: isSelected(book) }"
+                      @click.stop="toggleBook(book)"
                     >
-                      <span class="multiselect-check">{{ form.booktype.includes(option) ? '✓' : '' }}</span>
-                      {{ option }}
+                      <span class="multiselect-check">{{ isSelected(book) ? '✓' : '' }}</span>
+                      <span>{{ book.title }}</span>
+                      <span class="book-price-tag">₦{{ book.price.toLocaleString() }}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
+              <div v-if="form.selectedBooks.length > 0" class="total-display">
+                <span>Total:</span>
+                <strong>₦{{ totalAmount.toLocaleString() }}</strong>
+              </div>
+
               <div class="text-center mt-3">
-                <button type="submit" class="classic-btn" :disabled="isLoading" id="slide-text">
-                  {{ isLoading ? 'Processing...' : 'Purchase Tickets' }}
+                <button type="submit" class="classic-btn" :disabled="isLoading || form.selectedBooks.length === 0" id="slide-text">
+                  {{ isLoading ? 'Processing...' : 'Purchase Textbooks' }}
                   <i class="zmdi zmdi-long-arrow-right"></i>
                 </button>
               </div>
@@ -65,7 +72,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+
+const config = useRuntimeConfig() // ✅ capital C fixed
 
 const props = defineProps({
   modelValue: Boolean
@@ -75,50 +84,88 @@ const emit = defineEmits(['update:modelValue'])
 
 const modalRef = ref(null)
 const dropdownOpen = ref(false)
-const bookOptions = ['Math101', 'Physics', 'Chemistry', 'Biology']
+const isLoading = ref(false)
+const bookOptions = ref([])
 
 const form = ref({
   fullName: '',
   matricNo: '',
   email: '',
   phone: '',
-  booktype: []
+  selectedBooks: []
 })
 
-const isLoading = ref(false)
+const totalAmount = computed(() =>
+  form.value.selectedBooks.reduce((sum, book) => sum + book.price, 0)
+)
 
-const close = () => {
-  emit('update:modelValue', false)
-}
+const isSelected = (book) =>
+  form.value.selectedBooks.some(b => b.id === book.id)
+
+const close = () => emit('update:modelValue', false)
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
 }
 
 const toggleBook = (book) => {
-  const i = form.value.booktype.indexOf(book)
-  i === -1 ? form.value.booktype.push(book) : form.value.booktype.splice(i, 1)
+  const idx = form.value.selectedBooks.findIndex(b => b.id === book.id)
+  idx === -1
+    ? form.value.selectedBooks.push(book)
+    : form.value.selectedBooks.splice(idx, 1)
 }
 
 const removeBook = (book) => {
-  form.value.booktype = form.value.booktype.filter(b => b !== book)
+  form.value.selectedBooks = form.value.selectedBooks.filter(b => b.id !== book.id)
 }
 
 const handleOutsideClick = (e) => {
   if (!e.target.closest('.multiselect-wrapper')) dropdownOpen.value = false
 }
 
-onMounted(() => document.addEventListener('click', handleOutsideClick))
+onMounted(async () => {
+  document.addEventListener('click', handleOutsideClick)
+  try {
+    // ✅ Uses NUXT_PUBLIC_API_URL from .env automatically
+    const data = await $fetch(`${config.public.apiUrl}/api/v1/users/textbooks`)
+    bookOptions.value = data
+  } catch (err) {
+    console.error('Could not load books:', err)
+  }
+})
+
 onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
+  if (form.value.selectedBooks.length === 0) return
+
   isLoading.value = true
-  setTimeout(() => {
-    alert(`Thank you, ${form.value.fullName}! Your book purchase of "${form.value.booktype.join(', ')}" has been processed.`)
+
+  try {
+    // ✅ Uses NUXT_PUBLIC_API_URL from .env automatically
+    const response = await $fetch(`${config.public.apiUrl}/api/v1/users/payment/initialize`, {
+      method: 'POST',
+      body: {
+        fullName: form.value.fullName,
+        matricNo: form.value.matricNo,
+        email: form.value.email,
+        phone: form.value.phone,
+        books: form.value.selectedBooks.map(b => ({
+          id: b.id,
+          title: b.title,
+          price: b.price
+        })),
+        totalAmount: totalAmount.value
+      }
+    })
+
+    window.location.href = response.url
+
+  } catch (err) {
+    alert('Payment could not be started. Please try again.')
+  } finally {
     isLoading.value = false
-    form.value = { fullName: '', matricNo: '', email: '', phone: '', booktype: [] }
-    close()
-  }, 2000)
+  }
 }
 </script>
 
@@ -362,6 +409,23 @@ input::placeholder {
   background: black;
   border-color: black;
   color: white;
+}
+
+.book-price-tag {
+  margin-left: auto;
+  font-size: 12px;
+  color: #666;
+}
+
+.total-display {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 @media (max-width: 600px) {

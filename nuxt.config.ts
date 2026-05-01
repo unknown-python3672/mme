@@ -1,4 +1,15 @@
 export default defineNuxtConfig({
+  runtimeConfig: {
+    // 🔒 Secret key - backend only
+    paystackSecretKey: process.env.NUXT_SECRET_PAYSTACK_KEY,
+
+    // ✅ Public key - frontend safe
+    public: {
+    apiUrl: process.env.Nuxt_PUBLIC_API_URL,
+      paystackPublicKey: process.env.NUXT_PUBLIC_PAYSTACK_KEY
+    }
+  },  // ← don't forget this comma
+
   devtools: { enabled: true },
 
   compatibilityDate: '2024-04-03',
