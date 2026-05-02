@@ -62,7 +62,7 @@
                   {{ isLoading ? 'Processing...' : 'Purchase Textbooks' }}
                   <i class="zmdi zmdi-long-arrow-right"></i>
                 </button>
-              </div>
+              </div>  
             </div>
           </form>
         </div>

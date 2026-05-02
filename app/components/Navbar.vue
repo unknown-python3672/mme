@@ -3,7 +3,7 @@
   <nav ref="nav">
     <div class="nav-inner">
       <!-- Title -->
-      <div class="title">METAL AND METALLURGICAL ENGINEERING</div>
+      <div class="title">MATERIAL AND METALLURGICAL ENGINEERING</div>
 
       <div class="center-links">
         <nuxt-link to="/MME">Home</nuxt-link>
