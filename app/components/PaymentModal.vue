@@ -138,13 +138,24 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 
 const handleSubmit = async () => {
   if (form.value.selectedBooks.length === 0) return
-
   isLoading.value = true
 
   try {
-    // ✅ Uses NUXT_PUBLIC_API_URL from .env automatically
+    const token = localStorage.getItem('token')
+    console.log('Token:', token) // ← check this in console
+
+    if (!token) {
+      alert('Please log in first before purchasing.')
+      navigateTo('/')
+      return
+    }
+
     const response = await $fetch(`${config.public.apiUrl}/api/v1/users/payment/initialize`, {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
       body: {
         fullName: form.value.fullName,
         matricNo: form.value.matricNo,
@@ -159,9 +170,11 @@ const handleSubmit = async () => {
       }
     })
 
+    console.log('Payment response:', response) // ← check this too
     window.location.href = response.url
 
   } catch (err) {
+    console.error('Full error:', err) // ← see full error
     alert('Payment could not be started. Please try again.')
   } finally {
     isLoading.value = false
