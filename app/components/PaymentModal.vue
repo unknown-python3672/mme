@@ -14,7 +14,7 @@
                   <input v-model="form.fullName" type="text" class="form-control" placeholder="Your Name" required />
 
                   <div class="field-half">
-                    <input v-model="form.matricNo" type="number" class="form-control" placeholder="Matric Number" required />
+                    <input v-model="form.matricNo" type="text" class="form-control" placeholder="Matric Number" required />
                   </div>
 
                   <div class="field-half">
@@ -171,6 +171,21 @@ const handleSubmit = async () => {
     })
 
     console.log('Payment response:', response) // ← check this too
+    // Before redirecting to Paystack save the payment data
+    localStorage.setItem('studentName', form.value.fullName)
+    localStorage.setItem('pendingPayment', JSON.stringify({
+      fullName: form.value.fullName,
+      matricNo: form.value.matricNo,
+      email: form.value.email,
+      phone: form.value.phone,
+      books: form.value.selectedBooks.map(b => ({
+        id: b.id,
+        title: b.title,
+        price: b.price
+      })),
+      totalAmount: totalAmount.value
+    }))
+
     window.location.href = response.url
 
   } catch (err) {
