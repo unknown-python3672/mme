@@ -172,6 +172,7 @@ const handleSubmit = async () => {
 
     console.log('Payment response:', response) // ← check this too
     // Before redirecting to Paystack save the payment data
+    
     localStorage.setItem('studentName', form.value.fullName)
     localStorage.setItem('pendingPayment', JSON.stringify({
       fullName: form.value.fullName,

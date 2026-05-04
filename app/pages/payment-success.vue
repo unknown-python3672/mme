@@ -3,13 +3,14 @@
     <div class="success-card">
       <div class="icon">✅</div>
       <h1>Payment Successful!</h1>
-      <p>Thank you {{ studentName }} for your purchase.</p>
+      <p>Thank you <strong>{{ studentName }}</strong> for your purchase.</p>
       <p class="ref">Reference: {{ reference }}</p>
 
-      <button 
-        class="download-btn" 
-        @click="downloadReceipt" 
-        :disabled="downloading">
+      <button
+        class="download-btn"
+        @click="downloadReceipt"
+        :disabled="downloading"
+      >
         {{ downloading ? 'Generating PDF...' : '⬇ Download Receipt' }}
       </button>
 
@@ -19,21 +20,32 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+
 const config = useRuntimeConfig()
 const route = useRoute()
 const downloading = ref(false)
+const studentName = ref('')
+const reference = ref('')
 
-// Get data from localStorage that was saved before payment
-const studentName = ref(localStorage.getItem('studentName') || '')
-const reference = ref(route.query.reference || localStorage.getItem('paymentReference') || '')
+// ✅ Only access localStorage inside onMounted
+// This prevents the 500 error because localStorage
+// only exists in the browser not on the server
+onMounted(() => {
+  studentName.value = localStorage.getItem('studentName') || 'Student'
+  reference.value = route.query.reference || route.query.trxref || ''
+})
 
 const downloadReceipt = async () => {
   downloading.value = true
   try {
     const token = localStorage.getItem('token')
-    
-    // Get saved payment data
     const paymentData = JSON.parse(localStorage.getItem('pendingPayment') || '{}')
+
+    if (!paymentData.fullName) {
+      alert('Payment data not found. Please contact support.')
+      return
+    }
 
     const response = await fetch(
       `${config.public.apiUrl}/api/v1/users/receipt/download`,
@@ -50,16 +62,27 @@ const downloadReceipt = async () => {
       }
     )
 
-    // Download the PDF
+    if (!response.ok) {
+      throw new Error('Failed to generate receipt')
+    }
+
+    // ✅ Download PDF automatically
     const blob = await response.blob()
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
     link.download = `receipt_${reference.value}.pdf`
+    document.body.appendChild(link)
     link.click()
+    document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
 
+    // ✅ Clean up localStorage after download
+    localStorage.removeItem('pendingPayment')
+    localStorage.removeItem('studentName')
+
   } catch (err) {
+    console.error('Receipt error:', err)
     alert('Could not generate receipt. Please try again.')
   } finally {
     downloading.value = false
@@ -81,31 +104,37 @@ const downloadReceipt = async () => {
   padding: 40px;
   border-radius: 12px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   max-width: 500px;
   width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .icon {
   font-size: 60px;
-  margin-bottom: 20px;
 }
 
 h1 {
   font-size: 28px;
-  margin-bottom: 10px;
   color: #333;
+  margin: 0;
 }
 
 p {
   color: #666;
-  margin-bottom: 8px;
+  margin: 0;
+  font-size: 15px;
 }
 
 .ref {
-  font-size: 13px;
+  font-size: 12px;
   color: #999;
-  margin-bottom: 24px;
+  background: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 4px;
 }
 
 .download-btn {
@@ -117,7 +146,8 @@ p {
   border-radius: 6px;
   font-size: 16px;
   cursor: pointer;
-  margin-bottom: 16px;
+  margin-top: 8px;
+  transition: background 0.3s ease;
 }
 
 .download-btn:hover {
@@ -134,5 +164,16 @@ p {
   color: #666;
   text-decoration: underline;
   font-size: 14px;
+  margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+  .success-card {
+    padding: 24px 16px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
 }
 </style>
