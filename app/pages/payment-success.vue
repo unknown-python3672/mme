@@ -1,10 +1,12 @@
 <template>
   <div class="success-page">
     <div class="success-card">
-      <div class="icon">✅</div>
-      <h1>Payment Successful!</h1>
-      <p>Thank you <strong>{{ studentName }}</strong> for your purchase.</p>
-      <p class="ref">Reference: {{ reference }}</p>
+      <div class="anim-box">
+        <div ref="animRef" class="anim"></div>
+      </div>
+      <h1 class="payment-h1">Payment Successful!</h1>
+      <p id="pay-p">Thank you <strong>{{ studentName }}</strong> for your purchase.</p>
+      <p id="pay-p" class="ref">Reference: {{ reference }}</p>
 
       <button
         class="download-btn"
@@ -28,9 +30,7 @@ const downloading = ref(false)
 const studentName = ref('')
 const reference = ref('')
 
-// ✅ Only access localStorage inside onMounted
-// This prevents the 500 error because localStorage
-// only exists in the browser not on the server
+
 onMounted(() => {
   studentName.value = localStorage.getItem('studentName') || 'Student'
   reference.value = route.query.reference || route.query.trxref || ''
@@ -88,92 +88,33 @@ const downloadReceipt = async () => {
     downloading.value = false
   }
 }
+
+const animRef =ref(null);
+
+onMounted(async () => {
+  const lottie =(await import("lottie-web")).default;
+
+  lottie.loadAnimation({
+    container: animRef.value,
+    renderer: "svg",
+    loop: false,
+    autoplay: true,
+    path: "https://lottie.host/a9b3a051-bcea-4e07-ad6a-c635799607c1/fpp4kLmDMO.json"
+  });
+});
 </script>
 
 <style scoped>
-.success-page {
-  min-height: 100vh;
+.anim-box {
+  width: 120px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f5f5;
 }
 
-.success-card {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.icon {
-  font-size: 60px;
-}
-
-h1 {
-  font-size: 28px;
-  color: #333;
-  margin: 0;
-}
-
-p {
-  color: #666;
-  margin: 0;
-  font-size: 15px;
-}
-
-.ref {
-  font-size: 12px;
-  color: #999;
-  background: #f5f5f5;
-  padding: 6px 12px;
-  border-radius: 4px;
-}
-
-.download-btn {
+.anim{
   width: 100%;
-  padding: 14px;
-  background: black;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: background 0.3s ease;
-}
-
-.download-btn:hover {
-  background: #333;
-}
-
-.download-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.back-link {
-  display: block;
-  color: #666;
-  text-decoration: underline;
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-@media (max-width: 600px) {
-  .success-card {
-    padding: 24px 16px;
-  }
-
-  h1 {
-    font-size: 22px;
-  }
+  height: 100%;
 }
 </style>
