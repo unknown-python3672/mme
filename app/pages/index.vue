@@ -34,6 +34,7 @@ const handleLogin = async () => {
     })
 
     localStorage.setItem('token', data.accessToken)
+    localStorage.setItem('user', JSON.stringify(data.user))
     navigateTo('/MME')
 
   } catch (error) {

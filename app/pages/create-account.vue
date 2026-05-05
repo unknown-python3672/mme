@@ -5,6 +5,7 @@
     <form class="login-form" @submit.prevent="handleRegister">
       <input type="text" placeholder="Full name" v-model="name" required />
       <input type="email" placeholder="Email" v-model="email" required />
+      <input type="text" placeholder="phone number" v-model="phone" required />
       <input type="text" placeholder="Matric number" v-model="matricNumber" required />
       <input type="password" placeholder="Password" v-model="password" required />
 
@@ -28,6 +29,7 @@ const router = useRouter()
 const name = ref('')
 const email = ref('')
 const matricNumber = ref('')
+const phone = ref('')
 const password = ref('')
 const loading = ref(false)
 const errorMessage = ref('')
@@ -35,7 +37,7 @@ const successMessage = ref('')
 
 const validateForm = () => {
     // matric number regex
-    const matricRegex = /^(202[0-9]|20[3-9][0-9])\d{7}$/
+  
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
     if (!name.value || name.value.trim().length < 2) {
@@ -46,10 +48,7 @@ const validateForm = () => {
         errorMessage.value = 'Invalid email format'
         return false
     }
-    if (!matricRegex.test(matricNumber.value)) {
-        errorMessage.value = 'Matric number must be 10 digits starting with your admission year'
-        return false
-    }
+
     if (!password.value || password.value.length < 8) {
         errorMessage.value = 'Password must be at least 8 characters'
         return false
@@ -71,6 +70,7 @@ const handleRegister = async () => {
       name: name.value,
       email: email.value,
       matricNumber: matricNumber.value,
+      phone: phone.value,
       password: password.value
     })
 

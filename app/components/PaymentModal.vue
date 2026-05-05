@@ -58,11 +58,16 @@
               </div>
 
               <div class="text-center mt-3">
-                <button type="submit" class="classic-btn" :disabled="isLoading || form.selectedBooks.length === 0" id="slide-text">
+                <button
+                  type="submit"
+                  class="classic-btn"
+                  :disabled="isLoading || form.selectedBooks.length === 0"
+                  id="slide-text"
+                >
                   {{ isLoading ? 'Processing...' : 'Purchase Textbooks' }}
                   <i class="zmdi zmdi-long-arrow-right"></i>
                 </button>
-              </div>  
+              </div>
             </div>
           </form>
         </div>
@@ -74,7 +79,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
-const config = useRuntimeConfig() // ✅ capital C fixed
+const config = useRuntimeConfig()
 
 const props = defineProps({
   modelValue: Boolean
@@ -125,8 +130,19 @@ const handleOutsideClick = (e) => {
 
 onMounted(async () => {
   document.addEventListener('click', handleOutsideClick)
+
+  // ✅ localStorage safely inside onMounted — only runs in browser
+  const storedUser = localStorage.getItem('user')
+  if (storedUser) {
+    const user = JSON.parse(storedUser)
+    form.value.fullName = user.name || ''
+    form.value.email = user.email || ''
+    form.value.matricNo = user.matricNumber || ''
+    form.value.phone = user.phone || ''
+  }
+
+  // Fetch books from backend
   try {
-    // ✅ Uses NUXT_PUBLIC_API_URL from .env automatically
     const data = await $fetch(`${config.public.apiUrl}/api/v1/users/textbooks`)
     bookOptions.value = data
   } catch (err) {
@@ -142,7 +158,6 @@ const handleSubmit = async () => {
 
   try {
     const token = localStorage.getItem('token')
-    console.log('Token:', token) // ← check this in console
 
     if (!token) {
       alert('Please log in first before purchasing.')
@@ -170,9 +185,7 @@ const handleSubmit = async () => {
       }
     })
 
-    console.log('Payment response:', response) // ← check this too
-    // Before redirecting to Paystack save the payment data
-    
+    // Save payment data before redirecting to Paystack
     localStorage.setItem('studentName', form.value.fullName)
     localStorage.setItem('pendingPayment', JSON.stringify({
       fullName: form.value.fullName,
@@ -190,7 +203,7 @@ const handleSubmit = async () => {
     window.location.href = response.url
 
   } catch (err) {
-    console.error('Full error:', err) // ← see full error
+    console.error('Full error:', err)
     alert('Payment could not be started. Please try again.')
   } finally {
     isLoading.value = false
