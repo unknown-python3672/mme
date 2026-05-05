@@ -15,41 +15,63 @@
      <div class="slider">
       <div class="row">
         <div class="book1">
-          <p class="hidden">physics</p>
-          <img src="/yyy.jpg" alt="physics" />
+          <p class="hidden">physics104</p>
+          <img src="/physics.jpg" alt="physics" />
         </div>
           <div class="book1">
-          <p class="hidden">GST11</p>
-          <img src="/yyy.jpg" alt="GST11" />
+          <p class="hidden">GST112</p>
+          <img src="/english.jpg" alt="GST112" />
         </div>        
         <div class="book1">
-          <p class="hidden">chemistry</p>
-          <img src="/yyy.jpg" alt="chemistry" />
+          <p class="hidden">CHEMISTRY102/108</p>
+          <img src="/chemistry.jpg" alt="chemistry" />
         </div>
           <div class="book1">
-          <p class="hidden">MATH103</p>
-          <img src="/yyy.jpg" alt="MATH103" />
+          <p class="hidden">MATH102</p>
+          <img src="/math.jpg" alt="MATH102" />
         </div>
       </div>
       </div>
 
+
       <div class="slider">
       <div class="row">
          <div class="book1">
-          <p class="hidden">math</p>
-          <img src="/yyy.jpg" alt="math" />
+          <p class="hidden">IGBO102</p>
+          <img src="/igbo.png" alt="IGBO" />
         </div>
           <div class="book1">
-          <p class="hidden">physics</p>
-          <img src="/yyy.jpg" alt="physics" />
+          <p class="hidden">FRENCH102</p>
+          <img src="/french.png" alt="FRENCH" />
         </div>
         <div class="book1">
-          <p class="hidden">computer science</p>
-          <img src="/yyy.jpg" alt="computer science" />
+          <p class="hidden">ENGLISH 102</p>
+          <img src="/english 102.png" alt="ENGLISH" />
         </div>
         <div class="book1">
-          <p class="hidden">english</p>
-          <img src="/yyy.jpg" alt="english" />
+          <p class="hidden">STATISCS 112</p>
+          <img src="/statistics.png" alt="STATISTICS" />
+        </div>
+        </div>
+    </div>
+
+      <div class="slider">
+      <div class="row">
+         <div class="book1">
+          <p class="hidden">GET 102</p>
+          <img src="/GET 102.png" alt="math" />
+        </div>
+          <div class="book1">
+          <p class="hidden">MME 102</p>
+          <img src="/MME.png" alt="MME" />
+        </div>
+        <div class="book1">
+          <p class="hidden">PHYSICS 102</p>
+          <img src="/102.png" alt="PHYSICS" />
+        </div>
+        <div class="book1">
+          <p class="hidden">GET 108</p>
+          <img src="/get.png" alt="GET" />
         </div>
         </div>
     </div>
@@ -76,4 +98,8 @@ const openPaymentModal = () => {
 </script>
 
 <style scoped>
+img{
+  width: 250 px;
+  height: 250px;
+}
 </style>
