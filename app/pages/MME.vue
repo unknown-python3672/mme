@@ -14,19 +14,19 @@
     <div class="group-slide">
      <div class="slider">
       <div class="row">
-        <div class="book1">
+        <div class="book1" @click="openPaymentModal">
           <p class="hidden">physics104</p>
           <img src="/physics.jpg" alt="physics" />
         </div>
-          <div class="book1">
+          <div class="book1" @click="openPaymentModal">
           <p class="hidden">GST112</p>
-          <img src="/english.jpg" alt="GST112" />
+          <img src="/get112.png" alt="GST112" />
         </div>        
-        <div class="book1">
+        <div class="book1" @click="openPaymentModal">
           <p class="hidden">CHEMISTRY102/108</p>
           <img src="/chemistry.jpg" alt="chemistry" />
         </div>
-          <div class="book1">
+          <div class="book1" @click="openPaymentModal">
           <p class="hidden">MATH102</p>
           <img src="/math.jpg" alt="MATH102" />
         </div>
@@ -36,19 +36,19 @@
 
       <div class="slider">
       <div class="row">
-         <div class="book1">
+         <div class="book1" @click="openPaymentModal">
           <p class="hidden">IGBO102</p>
           <img src="/igbo.png" alt="IGBO" />
         </div>
-          <div class="book1">
+          <div class="book1" @click="openPaymentModal">
           <p class="hidden">FRENCH102</p>
           <img src="/french.png" alt="FRENCH" />
         </div>
-        <div class="book1">
+        <div class="book1" @click="openPaymentModal">
           <p class="hidden">ENGLISH 102</p>
           <img src="/english 102.png" alt="ENGLISH" />
         </div>
-        <div class="book1">
+        <div class="book1" @click="openPaymentModal">
           <p class="hidden">STATISCS 112</p>
           <img src="/statistics.png" alt="STATISTICS" />
         </div>
@@ -57,19 +57,19 @@
 
       <div class="slider">
       <div class="row">
-         <div class="book1">
+         <div class="book1" @click="openPaymentModal">
           <p class="hidden">GET 102</p>
           <img src="/GET 102.png" alt="math" />
         </div>
-          <div class="book1">
+          <div class="book1" @click="openPaymentModal">
           <p class="hidden">MME 102</p>
           <img src="/MME.png" alt="MME" />
         </div>
-        <div class="book1">
+        <div class="book1" @click="openPaymentModal">
           <p class="hidden">PHYSICS 102</p>
           <img src="/102.png" alt="PHYSICS" />
         </div>
-        <div class="book1">
+        <div class="book1" @click="openPaymentModal">
           <p class="hidden">GET 108</p>
           <img src="/get.png" alt="GET" />
         </div>
@@ -94,6 +94,7 @@ const openPaymentModal = () => {
   console.log("Opening payment modal")
   isPaymentModalOpen.value = true
 }
+
 
 </script>
 
