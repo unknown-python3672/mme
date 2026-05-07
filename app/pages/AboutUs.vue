@@ -55,14 +55,14 @@
 }
 
 .right{
-    width: 50%;
+    width: 60%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
 }
 img{
     padding-left: 80px;
-    width: 50%;
+    width: 60%;
     /* max-width: 480px; */
 
 }
