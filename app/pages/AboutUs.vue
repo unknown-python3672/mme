@@ -2,7 +2,7 @@
   <div class="body">
     <Navbar />
     <div class="wrapper">
-        <div class="left fade-element" style="transition-delay: 0s">
+        <div class="left" data-aos="fade-right" style="transition-delay: 0s">
             <h3 class="left-head">About the Department</h3>
             <p>
                 The Department of Materials and Metallurgical Engineering at MMU is dedicated to shaping innovators who understand the science of materials and the technology of metals.
@@ -18,7 +18,7 @@
             </p>
         </div>
         
-        <div class="right fade-element" style="transition-delay: 0.2s">
+        <div class="right" data-aos="fade-left" style="transition-delay: 0.2s">
           <div class="img-cover">
             <img src="/MME2.png" />
           </div>

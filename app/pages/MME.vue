@@ -2,17 +2,19 @@
   <Navbar />
 <PaymentModal v-model="isPaymentModalOpen" />
 <div>
-      <div class="note">
+  <div data-aos="fade-down">
+      <div class="note" data-aos="fade-down">
           <h2>MME Textbook Store</h2>
         <p>MME is an online textbook store that offers a wide range of textbooks for students of all levels. We provide a convenient and efficient way for students to purchase their textbooks online, saving them time and effort. With our user-friendly website and secure payment options, students can easily browse through our extensive collection of textbooks, select the ones they need, and have them delivered right to their doorstep. At MME, we are committed to providing high-quality textbooks at competitive prices, ensuring that students have access to the resources they need for their academic success.</p>
         <spam>100+ level courses</spam>
         </div>
-    <div class="parent">
+    <div class="parent" data-aos="fade-down">
       <h1 class="welcome">Welcome to MME</h1>
       <p>Purchase several textbooks easily, fast, and online from the comfort of your home.</p>
     </div>
+    </div>
     <div class="group-slide">
-     <div class="slider">
+     <div class="slider" data-aos="fade-left">
       <div class="row">
         <div class="book1" @click="openPaymentModal">
           <p class="hidden">physics104</p>
@@ -34,7 +36,7 @@
       </div>
 
 
-      <div class="slider">
+      <div class="slider" data-aos="fade-right">
       <div class="row">
          <div class="book1" @click="openPaymentModal">
           <p class="hidden">IGBO102</p>
@@ -55,7 +57,7 @@
         </div>
     </div>
 
-      <div class="slider">
+      <div class="slider" data-aos="fade-up">
       <div class="row">
          <div class="book1" @click="openPaymentModal">
           <p class="hidden">GET 102</p>
