@@ -7,7 +7,7 @@
 
       <div class="center-links">
         <nuxt-link to="/MME">Home</nuxt-link>
-        <nuxt-link to="/MME">MME</nuxt-link>
+        <nuxt-link to="/AboutUs">MME</nuxt-link>
       </div>
 
       <div class="nav-right">
@@ -30,12 +30,13 @@
 
 <style lang="css" scoped>
 nav {
-  width: 100%;
+  margin: 20px;
+  width: calc(100% - 40px);
   background-color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.525);
   position: relative;
   z-index: 1;
-  border_radius: 20px;
+  border-radius: 10px;
 }
 
 .nav-inner {
