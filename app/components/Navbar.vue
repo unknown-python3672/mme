@@ -186,14 +186,14 @@ a {
 </style>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import PaymentModal from '../components/PaymentModal.vue'
-import { ref } from 'vue'
 
 const isPaymentModalOpen = ref(false)
-const isOpen = ref(false)        // ← renamed from isopen for clarity
+const isOpen = ref(false)
+const nav = ref(null)
 
 const openPaymentModal = () => {
-  console.log("Opened payment modal from navbar")
   isPaymentModalOpen.value = true
 }
 
@@ -201,13 +201,27 @@ const toggleMenu = () => {
   isOpen.value = !isOpen.value
 }
 
-const nav = ref(null)
-
 const handleScroll = () => {
-  const scrollY = window.scrollY
+  if (!nav.value) return
 
-  if (nav.value) {
-    nav.value.style.transform = `translateY(${scrollY * 0.5}px)`
+  const scrollY = window.scrollY
+  const threshold = 40 // The scroll point where it should become "fixed"
+
+  if (scrollY < threshold) {
+    // Phase 1: Parallax (0.5x speed)
+    const translateY = scrollY * 0.5
+    nav.value.style.transform = `translateY(${translateY}px)`
+    nav.value.style.position = 'relative'
+    nav.value.style.top = '0'
+  } else {
+    // Phase 2: "Fixed" (1.0x speed)
+    // We calculate the position it was at the threshold (40 * 0.5 = 20)
+    // Then add the difference in scroll to stay "pinned" at the top
+    const basePos = threshold * 0.5
+    const extra = (scrollY - threshold)
+    nav.value.style.transform = `translateY(${basePos + extra}px)`
+    
+    // Optional: add a class for styling when "fixed" (e.g., removing border-radius)
   }
 }
 
@@ -218,4 +232,4 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
 })
-</script>
+</script setup>
