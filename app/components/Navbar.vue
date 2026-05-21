@@ -8,6 +8,7 @@
       <div class="center-links">
         <nuxt-link to="/MME">Home</nuxt-link>
         <nuxt-link to="/AboutUs">MME</nuxt-link>
+        <nuxt-link v-if="user?.role === 'Admin'" to="/admin/get-users">Admin</nuxt-link>
       </div>
 
       <div class="nav-right">
@@ -22,7 +23,8 @@
 
     <div class="mobile-menu" :class="{ open: isOpen }">
       <nuxt-link to="/MME" @click="isOpen = false">Home</nuxt-link>
-      <nuxt-link to="/MME" @click="isOpen = false">MME</nuxt-link>
+      <nuxt-link to="/AboutUs" @click="isOpen = false">About Us</nuxt-link>
+      <nuxt-link v-if="user?.role === 'Admin'" to="/admin/get-users" @click="isOpen = false">Admin</nuxt-link>
       <button @click="openPaymentModal(); isOpen = false">Purchase</button>
     </div>
   </nav>
@@ -189,6 +191,14 @@ a {
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import PaymentModal from '../components/PaymentModal.vue'
 
+const user = useCookie('user')
+
+const handleLogout = () =>{
+  user.value = null
+  const token =useCookie('token')
+  token.value = null
+}
+
 const isPaymentModalOpen = ref(false)
 const isOpen = ref(false)
 const nav = ref(null)
@@ -232,4 +242,4 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll)
 })
-</script setup>
+</script>

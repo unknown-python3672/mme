@@ -33,8 +33,13 @@ const handleLogin = async () => {
       password: password.value
     })
 
-    localStorage.setItem('token', data.accessToken)
-    localStorage.setItem('user', JSON.stringify(data.user))
+    const token =useCookie('token')
+    const user =useCookie('user')
+
+    token.value = data.accessToken
+    user.value = data.user
+
+    await nextTick()
     navigateTo('/MME')
 
   } catch (error) {
