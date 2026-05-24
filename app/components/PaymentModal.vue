@@ -131,10 +131,38 @@ const handleOutsideClick = (e) => {
 onMounted(async () => {
   document.addEventListener('click', handleOutsideClick)
 
-  // ✅ localStorage safely inside onMounted — only runs in browser
+  // ✅ Always get fresh user data from localStorage
   const storedUser = localStorage.getItem('user')
   if (storedUser) {
-    const user = JSON.parse(storedUser)
+    try {
+      const user = JSON.parse(storedUser)
+      form.value.fullName = user.name || ''
+      form.value.email = user.email || ''
+      form.value.matricNo = user.matricNumber || ''
+      form.value.phone = user.phone || ''
+    } catch (e) {
+      // Clear corrupted data
+      localStorage.removeItem('user')
+    }
+  }
+
+  // Fetch books from backend
+  try {
+    const data = await $fetch(`${config.public.apiUrl}/api/v1/users/textbooks`)
+    bookOptions.value = data
+  } catch (err) {
+    console.error('Could not load books:', err)
+  }
+})
+
+onMounted(async () => {
+  document.addEventListener('click', handleOutsideClick)
+
+  // ✅ Read from cookie instead of localStorage
+  const userCookie = useCookie('user')
+  const user = userCookie.value
+
+  if (user) {
     form.value.fullName = user.name || ''
     form.value.email = user.email || ''
     form.value.matricNo = user.matricNumber || ''
@@ -150,27 +178,21 @@ onMounted(async () => {
   }
 })
 
-onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
-
 const handleSubmit = async () => {
   if (form.value.selectedBooks.length === 0) return
   isLoading.value = true
 
   try {
-    const token = localStorage.getItem('token')
-
-    if (!token) {
-      alert('Please log in first before purchasing.')
-      navigateTo('/')
-      return
+    // ✅ Get email from cookie not localStorage
+    const userCookie = useCookie('user')
+    if (userCookie.value) {
+      form.value.email = userCookie.value.email
     }
 
     const response = await $fetch(`${config.public.apiUrl}/api/v1/users/payment/initialize`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
       body: {
         fullName: form.value.fullName,
         matricNo: form.value.matricNo,
@@ -185,7 +207,6 @@ const handleSubmit = async () => {
       }
     })
 
-    // Save payment data before redirecting to Paystack
     localStorage.setItem('studentName', form.value.fullName)
     localStorage.setItem('pendingPayment', JSON.stringify({
       fullName: form.value.fullName,

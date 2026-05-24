@@ -39,7 +39,8 @@ onMounted(() => {
 const downloadReceipt = async () => {
   downloading.value = true
   try {
-    const token = localStorage.getItem('token')
+    // ✅ Read from cookie instead of localStorage
+    const tokenCookie = useCookie('token')
     const paymentData = JSON.parse(localStorage.getItem('pendingPayment') || '{}')
 
     if (!paymentData.fullName) {
@@ -51,9 +52,9 @@ const downloadReceipt = async () => {
       `${config.public.apiUrl}/api/v1/users/receipt/download`,
       {
         method: 'POST',
+        credentials: 'include', // ✅ sends cookie automatically
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           ...paymentData,
@@ -66,7 +67,6 @@ const downloadReceipt = async () => {
       throw new Error('Failed to generate receipt')
     }
 
-    // ✅ Download PDF automatically
     const blob = await response.blob()
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -77,7 +77,6 @@ const downloadReceipt = async () => {
     document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
 
-    // ✅ Clean up localStorage after download
     localStorage.removeItem('pendingPayment')
     localStorage.removeItem('studentName')
 
