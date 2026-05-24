@@ -194,7 +194,10 @@ const handleSubmit = async () => {
     const response = await $fetch(`${config.public.apiUrl}/api/v1/users/payment/initialize`, {
       method: 'POST',
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json' ,
+        'Authorization': `Bearer ${tokenCookie.value}`
+      },
       body: {
         fullName: form.value.fullName,
         matricNo: form.value.matricNo,
