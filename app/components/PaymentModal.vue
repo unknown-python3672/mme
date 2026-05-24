@@ -185,6 +185,7 @@ const handleSubmit = async () => {
   try {
     // ✅ Get email from cookie not localStorage
     const userCookie = useCookie('user')
+    const tokenCookie = useCookie('token')
     if (userCookie.value) {
       form.value.email = userCookie.value.email
     }
