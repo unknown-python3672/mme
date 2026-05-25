@@ -11,11 +11,13 @@ const api = axios.create({
 
 // automatically attach token to every request if it exists
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token')
+   if (process.client){
+    const token = useCookie('token').value
     if (token) {
         config.headers.Authorization = `Bearer ${token}`
     }
-    return config
+   }
+   return config
 })
 
 export default api
