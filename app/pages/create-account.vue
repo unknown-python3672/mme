@@ -36,7 +36,7 @@ const errorMessage = ref('')
 const successMessage = ref('')
 
 const validateForm = () => {
-    // matric number regex
+    const matricRegex = /^[0-9]{9,12}$/
   
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -60,9 +60,8 @@ const handleRegister = async () => {
   errorMessage.value = ''
   if (!validateForm()) {
     return
-  } 
+  }
   loading.value = true
-  errorMessage.value = ''
   successMessage.value = ''
 
   try {
@@ -78,7 +77,8 @@ const handleRegister = async () => {
     setTimeout(() => router.push('/'), 2000)
 
   } catch (error) {
-    errorMessage.value = error.response?.data || error.message|| 'Something went wrong'
+    // ✅ Uses clean message from api.js interceptor
+    errorMessage.value = error.userMessage || 'Something went wrong'
   } finally {
     loading.value = false
   }

@@ -8,7 +8,9 @@
       
       <p v-if="errorMessage" style="color: red; font-size: 14px;">{{ errorMessage }}</p>
 
-      <button class="but2" type="submit">{{ loading ? 'Logging in...' : 'Log In' }}</button>
+      <button class="but2" type="submit" :disabled="loading">
+        {{ loading ? 'Logging in...' : 'Log In' }}
+      </button>
     </form>
     <NuxtLink to="/create-account" class="acc">Create account</NuxtLink>  
   </div>
@@ -43,9 +45,8 @@ const handleLogin = async () => {
     navigateTo('/MME')
 
   } catch (error) {
-    errorMessage.value = error.response?.data || error.message || 'Invalid email or password'
-  } finally {
-    loading.value = false
+    // ✅ Uses the clean message from interceptor
+    errorMessage.value = error.userMessage || 'Login failed'
   }
 }
 </script>
