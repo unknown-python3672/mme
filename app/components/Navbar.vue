@@ -8,7 +8,16 @@
       <div class="center-links">
         <nuxt-link to="/MME">Home</nuxt-link>
         <nuxt-link to="/AboutUs">MME</nuxt-link>
-        <nuxt-link v-if="user?.role === 'Admin'" to="/admin/get-users">Admin</nuxt-link>
+        <div v-if="user?.role === 'Admin'"
+         class="dropdown" 
+         @mouseenter="open = true"
+          @mouseleave="open = false">
+          <button>Admin</button>
+        <ul v-if="open" class="dropdown-menu">
+          <li><nuxt-link to="/admin/get-users">Get Users</nuxt-link></li>
+          <li><nuxt-link to="/admin/payment-history">Payment History</nuxt-link></li>
+        </ul>
+      </div>
       </div>
 
       <div class="nav-right">
@@ -50,6 +59,31 @@ nav {
   transition: 0.1 ease;
 }
 
+.dropdown{
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  border-radius: 4px;
+  overflow: hidden;
+  list-style: none;
+}
+
+
+.dropdown-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background: #f0f0f0;
+}
 
 .title {
   color: black;
@@ -190,6 +224,14 @@ a {
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import PaymentModal from '../components/PaymentModal.vue'
+
+const open = ref(false)
+const handleDropdown = () => {
+  open.value = !open.value
+}
+const toggleDropdown = () => {
+  open.value = !open.value
+}
 
 const user = useCookie('user')
 
