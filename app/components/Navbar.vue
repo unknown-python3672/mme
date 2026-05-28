@@ -12,11 +12,13 @@
          class="dropdown" 
          @mouseenter="open = true"
           @mouseleave="open = false">
-          <button>Admin</button>
+          <button class="dropdown-toggle"> Admin ▼ </button>
+          <Transition name="dropdown">
         <ul v-if="open" class="dropdown-menu">
           <li><nuxt-link to="/admin/get-users">Get Users</nuxt-link></li>
           <li><nuxt-link to="/admin/payment-history">Payment History</nuxt-link></li>
         </ul>
+          </Transition>
       </div>
       </div>
 
@@ -73,8 +75,29 @@ nav {
   border-radius: 4px;
   overflow: hidden;
   list-style: none;
+  padding: 0; 
+  margin: 0;    
+  list-style: none;
 }
 
+.dropdown-toggle{
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.dropdown-toggle:hover {
+  color: #007BFF;
+}
+
+.dropdown-enter-active, .dropdown-leave-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;;
+
+}
+
+.dropdown-enter-from, .dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
 
 .dropdown-menu li {
   padding: 8px 12px;
@@ -233,6 +256,24 @@ const toggleDropdown = () => {
   open.value = !open.value
 }
 
+const isMobile = ref(false)
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth <= 600
+}
+
+onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
+  window.addEventListener('scroll', handleScroll)
+
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkMobile)
+  window.removeEventListener('scroll', handleScroll)
+})
+
 const user = useCookie('user')
 
 const handleLogout = () =>{
@@ -277,11 +318,5 @@ const handleScroll = () => {
   }
 }
 
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+#
 </script>
