@@ -89,6 +89,8 @@
 import '../assets/css/main.css';
 import PaymentModal from '../components/PaymentModal.vue'
 import { provide, ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const isPaymentModalOpen = ref(false)
 
@@ -96,6 +98,36 @@ const openPaymentModal = () => {
   console.log("Opening payment modal")
   isPaymentModalOpen.value = true
 }
+
+
+
+const route = useRoute()
+const router = useRouter()
+
+onMounted(() => {
+  const queryUser = route.query.user
+  const queryToken = route.query.token
+
+  if (queryUser) {
+    const rawUser = Array.isArray(queryUser) ? queryUser[0] : queryUser
+    const normalized = rawUser.replace(/\+/g, '%20')
+    try {
+      const parsedUser = JSON.parse(decodeURIComponent(normalized))
+      localStorage.setItem('user', JSON.stringify(parsedUser))
+    } catch (err) {
+      console.error('Failed to parse redirected user:', err)
+    }
+  }
+
+  if (queryToken) {
+    const rawToken = Array.isArray(queryToken) ? queryToken[0] : queryToken
+    localStorage.setItem('token', rawToken)
+  }
+
+  if (queryUser || queryToken) {
+    router.replace({ query: {} })
+  }
+})
 
 
 </script>

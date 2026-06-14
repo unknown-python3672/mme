@@ -180,31 +180,7 @@ onMounted(async () => {
 
   //read the localstrage wen there is a redirect because of some random nigga paystack
 
-  const route = useRoute()
-  const router = useRouter()
-
- const queryUser = route.query.user
-const queryToken = route.query.token
-
-if (queryUser) {
-  const rawUser = Array.isArray(queryUser) ? queryUser[0] : queryUser
-  const normalized = rawUser.replace(/\+/g, '%20')          // fix plus -> space
-  try {
-    const parsedUser = JSON.parse(decodeURIComponent(normalized))
-    localStorage.setItem('user', JSON.stringify(parsedUser))
-  } catch (err) {
-    console.error('Failed to parse redirected user:', err)
-  }
-}
-
-if (queryToken) {
-  const rawToken = Array.isArray(queryToken) ? queryToken[0] : queryToken
-  localStorage.setItem('token', rawToken)
-}
-
-if (queryUser || queryToken) {
-  router.replace({ query: {} })
-}
+ 
 })
 
 const handleSubmit = async () => {
