@@ -88,7 +88,7 @@
 <script setup>
 import '../assets/css/main.css';
 import PaymentModal from '../components/PaymentModal.vue'
-import { provide, ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const isPaymentModalOpen = ref(false)
