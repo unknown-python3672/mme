@@ -78,6 +78,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const config = useRuntimeConfig()
 
@@ -158,7 +159,7 @@ onMounted(async () => {
 onMounted(async () => {
   document.addEventListener('click', handleOutsideClick)
 
-  // ✅ Read from cookie instead of localStorage
+
   const userCookie = useCookie('user')
   const user = userCookie.value
 
@@ -175,6 +176,28 @@ onMounted(async () => {
     bookOptions.value = data
   } catch (err) {
     console.error('Could not load books:', err)
+  }
+
+  //read the localstrage wen there is a redirect because of some random nigga paystack
+
+  const route = useRoute()
+  const router = useRouter()
+
+  const queryUser = route.query.user
+  const queryToken = route.query.token
+
+  if(queryUser) {
+    const rawUser = Array.isArray(queryUser) ? queryUser[0] :queryUser
+    const User =  JSON.parse(decodeURIComponent(rawUser))
+    localStorage.setItem('user', JSON.stringify(user))
+  }
+
+  if (queryToken) {
+    const rawToken = Array.isArray(queryToken) ? queryToken[0] :queryToken
+    localStorage.setItem('token', rawToken)
+  }
+  if (queryUser || queryToken) {
+    router.replace({ query: {} })
   }
 })
 
