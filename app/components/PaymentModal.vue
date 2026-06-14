@@ -129,39 +129,40 @@ const handleOutsideClick = (e) => {
   if (!e.target.closest('.multiselect-wrapper')) dropdownOpen.value = false
 }
 
+
+onMounted(async () => {
 onMounted(async () => {
   document.addEventListener('click', handleOutsideClick)
 
-  // ✅ Always get fresh user data from localStorage
-  const storedUser = localStorage.getItem('user')
-  if (storedUser) {
-    try {
-      const user = JSON.parse(storedUser)
-      form.value.fullName = user.name || ''
-      form.value.email = user.email || ''
-      form.value.matricNo = user.matricNumber || ''
-      form.value.phone = user.phone || ''
-    } catch (e) {
-      // Clear corrupted data
-      localStorage.removeItem('user')
+  // ✅ Try cookie first (magic link users)
+  const userCookie = useCookie('user')
+  let user = null
+
+  if (userCookie.value) {
+    if (typeof userCookie.value === 'string') {
+      try {
+        // Decode + signs and URL encoding
+        const decoded = decodeURIComponent(userCookie.value.replace(/\+/g, '%20'))
+        user = JSON.parse(decoded)
+      } catch (e) {
+        console.error('Cookie parse error:', e)
+      }
+    } else {
+      user = userCookie.value
     }
   }
 
-  // Fetch books from backend
-  try {
-    const data = await $fetch(`${config.public.apiUrl}/api/v1/users/textbooks`)
-    bookOptions.value = data
-  } catch (err) {
-    console.error('Could not load books:', err)
+  if (!user) {
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      try {
+        user = JSON.parse(storedUser)
+      } catch (e) {
+        localStorage.removeItem('user')
+      }
+    }
   }
-})
 
-onMounted(async () => {
-  document.addEventListener('click', handleOutsideClick)
-
-
-  const userCookie = useCookie('user')
-  const user = userCookie.value
 
   if (user) {
     form.value.fullName = user.name || ''
@@ -170,13 +171,14 @@ onMounted(async () => {
     form.value.phone = user.phone || ''
   }
 
-  // Fetch books from backend
+  // Fetch books
   try {
     const data = await $fetch(`${config.public.apiUrl}/api/v1/users/textbooks`)
     bookOptions.value = data
   } catch (err) {
     console.error('Could not load books:', err)
   }
+})
 
   //read the localstrage wen there is a redirect because of some random nigga paystack
 

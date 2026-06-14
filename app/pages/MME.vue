@@ -112,7 +112,12 @@ onMounted(() => {
     const normalized = rawUser.replace(/\+/g, '%20')
     try {
       const parsedUser = JSON.parse(decodeURIComponent(normalized))
+      
+      // Save as both ookie and local storage
       localStorage.setItem('user', JSON.stringify(parsedUser))
+      const userCookie = useCookie('user')
+      userCookie.value = parsedUser
+      
     } catch (err) {
       console.error('Failed to parse redirected user:', err)
     }
@@ -120,7 +125,11 @@ onMounted(() => {
 
   if (queryToken) {
     const rawToken = Array.isArray(queryToken) ? queryToken[0] : queryToken
+    
+    // ✅ Save to both localStorage AND cookie
     localStorage.setItem('token', rawToken)
+    const tokenCookie = useCookie('token')
+    tokenCookie.value = rawToken
   }
 
   if (queryUser || queryToken) {
