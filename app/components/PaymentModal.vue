@@ -78,7 +78,6 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 
 const config = useRuntimeConfig()
 
@@ -129,41 +128,53 @@ const handleOutsideClick = (e) => {
   if (!e.target.closest('.multiselect-wrapper')) dropdownOpen.value = false
 }
 
+// ✅ Helper to read raw cookie from document.cookie
+const getRawCookie = (name) => {
+  if (typeof document === 'undefined') return null
+  const cookies = document.cookie.split(';')
+  const found = cookies.find(c => c.trim().startsWith(`${name}=`))
+  if (!found) return null
+  return found.split('=').slice(1).join('=')
+}
 
-onMounted(async () => {
+// ✅ Helper to get user from cookie or localStorage
+const getUser = () => {
+  // Try raw cookie first (magic link users)
+  const rawCookie = getRawCookie('user')
+  if (rawCookie) {
+    try {
+      const decoded = decodeURIComponent(rawCookie.replace(/\+/g, ' '))
+      return JSON.parse(decoded)
+    } catch (e) {
+      console.error('Cookie parse error:', e)
+    }
+  }
+
+  // Fall back to localStorage (normal logged in users)
+  const storedUser = localStorage.getItem('user')
+  if (storedUser) {
+    try {
+      return JSON.parse(storedUser)
+    } catch (e) {
+      localStorage.removeItem('user')
+    }
+  }
+
+  return null
+}
+
+// ✅ Helper to get token from cookie or localStorage
+const getToken = () => {
+  const rawCookie = getRawCookie('token')
+  if (rawCookie) return rawCookie
+  return localStorage.getItem('token') || null
+}
+
 onMounted(async () => {
   document.addEventListener('click', handleOutsideClick)
 
-  // ✅ Try cookie first (magic link users)
-  const userCookie = useCookie('user')
-  let user = null
-
-  if (userCookie.value) {
-    if (typeof userCookie.value === 'string') {
-      try {
-        // Decode + signs and URL encoding
-        const decoded = decodeURIComponent(userCookie.value.replace(/\+/g, '%20'))
-        user = JSON.parse(decoded)
-      } catch (e) {
-        console.error('Cookie parse error:', e)
-      }
-    } else {
-      user = userCookie.value
-    }
-  }
-
-  if (!user) {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      try {
-        user = JSON.parse(storedUser)
-      } catch (e) {
-        localStorage.removeItem('user')
-      }
-    }
-  }
-
-
+  // ✅ Fill form with user data
+  const user = getUser()
   if (user) {
     form.value.fullName = user.name || ''
     form.value.email = user.email || ''
@@ -171,7 +182,7 @@ onMounted(async () => {
     form.value.phone = user.phone || ''
   }
 
-  // Fetch books
+  // ✅ Fetch books
   try {
     const data = await $fetch(`${config.public.apiUrl}/api/v1/users/textbooks`)
     bookOptions.value = data
@@ -180,29 +191,34 @@ onMounted(async () => {
   }
 })
 
-  //read the localstrage wen there is a redirect because of some random nigga paystack
-
- 
-})
+onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 
 const handleSubmit = async () => {
   if (form.value.selectedBooks.length === 0) return
   isLoading.value = true
 
   try {
-    // ✅ Get email from cookie not localStorage
-    const userCookie = useCookie('user')
-    const tokenCookie = useCookie('token')
-    if (userCookie.value) {
-      form.value.email = userCookie.value.email
+    // ✅ Always get fresh user and token
+    const user = getUser()
+    const token = getToken()
+
+    if (!token) {
+      alert('Please log in first before purchasing.')
+      navigateTo('/')
+      return
+    }
+
+    // ✅ Always use email from stored user not typed email
+    if (user) {
+      form.value.email = user.email
     }
 
     const response = await $fetch(`${config.public.apiUrl}/api/v1/users/payment/initialize`, {
       method: 'POST',
       credentials: 'include',
-      headers: { 
-        'Content-Type': 'application/json' ,
-        'Authorization': `Bearer ${tokenCookie.value}`
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: {
         fullName: form.value.fullName,
@@ -218,6 +234,7 @@ const handleSubmit = async () => {
       }
     })
 
+    // ✅ Save payment data before redirecting
     localStorage.setItem('studentName', form.value.fullName)
     localStorage.setItem('pendingPayment', JSON.stringify({
       fullName: form.value.fullName,
