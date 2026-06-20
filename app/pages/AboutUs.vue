@@ -1,94 +1,143 @@
 <template>
-  <div class="body">
+  <div class="about-page">
     <Navbar />
-    <div class="wrapper">
-        <div class="left" data-aos="fade-right" style="transition-delay: 0s">
-            <h3 class="left-head">About the Department</h3>
-            <p>
-                The Department of Materials and Metallurgical Engineering at MMU is dedicated to shaping innovators who understand the science of materials and the technology of metals.
-            </p>
-            <p>
-                Students here explore how materials are designed, processed, and applied to solve real-world challenges in industries such as manufacturing, energy, aerospace, and healthcare.
-            </p>
+    <section class="about-section">
+      <div class="about-content" data-aos="fade-right" style="--aos-delay: 0s">
+        <div class="text-block">
+          <h2 class="section-title">About the Department</h2>
+          <p class="section-text">
+            The Department of Materials and Metallurgical Engineering at MMU is dedicated to shaping innovators who understand the science of materials and the technology of metals.
+          </p>
+          <p class="section-text">
+            Students here explore how materials are designed, processed, and applied to solve real-world challenges in industries such as manufacturing, energy, aerospace, and healthcare.
+          </p>
+        </div>
 
-            <h3 class="left-head">About the Website</h3>
-            <p>
-                This platform is designed to make student life easier by providing quick access to textbooks, study guides, and essential learning materials.
-                Whether you’re preparing for exams, working on projects, or deepening your knowledge, the website is your one-stop shop for academic resources tailored to MME students.
-            </p>
+        <div class="text-block">
+          <h2 class="section-title">About the Website</h2>
+          <p class="section-text">
+            This platform is designed to make student life easier by providing quick access to textbooks, study guides, and essential learning materials.
+            Whether you're preparing for exams, working on projects, or deepening your knowledge, the website is your one-stop shop for academic resources tailored to MME students.
+          </p>
         </div>
+      </div>
         
-        <div class="right" data-aos="fade-left" style="transition-delay: 0.2s">
-          <div class="img-cover">
-            <img src="/MME2.png" />
-          </div>
+      <div class="about-image" data-aos="fade-left" style="--aos-delay: 0.2s">
+        <div class="image-container">
+          <img src="/MME2.png" alt="MME Department" loading="lazy" />
         </div>
-    </div>
-    </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <style scoped>
-.body{
-    background: linear-gradient(to bottom,  #007BFF, #0040a0);
-    padding-top:  5px;
-    overflow: hidden;
+.about-page {
+  background: linear-gradient(135deg, #007bff 0%, #0040a0 100%);
+  min-height: 100vh;
+  overflow: hidden;
 }
-.wrapper{
-    overflow: hidden;
-    padding: 40px;
-    display: flex;
+
+.about-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  padding: 60px 40px;
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.about-content {
+  flex: 1;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.text-block {
+  animation-duration: 0.6s;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 8px;
+  margin-bottom: 16px;
+}
+
+.section-text {
+  font-size: 1rem;
+  line-height: 1.8;
+  font-family: 'Roboto', sans-serif;
+  opacity: 0.95;
+}
+
+.about-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-section {
+    flex-direction: column;
     gap: 40px;
-    min-height: 100vh;
-    justify-content: space-between;
+    padding: 40px 20px;
+  }
+
+  .about-content,
+  .about-image {
+    flex: 1 1 100%;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .section-text {
+    font-size: 0.95rem;
+  }
+
+  .image-container {
+    max-width: 300px;
+  }
 }
 
-.left{
-    width: 50%;
-    color: white;
-}
+@media (max-width: 480px) {
+  .about-section {
+    padding: 30px 16px;
+  }
 
-.left-head{
-    text-decoration: underline;
-    font-family: 'roboto', sans-serif;
-    font-size: 19px;
+  .section-title {
+    font-size: 1.25rem;
+  }
 
-}
-
-.right{
-    width: 60%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-img{
-    padding-left: 80px;
-    width: 60%;
-    /* max-width: 480px; */
-
-}
-.left-head{
-    margin-top: 20px;
+  .section-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
 }
 </style>
 
-<script>
-
-import { ref, onMounted } from 'vue'
-
-const leftSection = ref(null)
-const rightSection = ref(null)
-
-onMounted(() => {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible')
-      }
-    })
-  }, { threshold: 0.1 }) // triggers when 10% of element is visible
-
-  // Observe each element
-  observer.observe(leftSection.value)
-  observer.observe(rightSection.value)
-})
-</script>
+<script setup></script>
