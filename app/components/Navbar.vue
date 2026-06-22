@@ -69,7 +69,7 @@ nav {
   align-items: center;
   padding: 12px 20px;
   transform: translateY(0);
-  transition: 0.1 ease;
+  transition: 0.1s ease;
 }
 
 .dropdown{
@@ -270,6 +270,19 @@ a {
   .mobile-menu {
     display: flex;      
   }
+
+  .mobile-menu.open {
+    max-height: 500px; /* Boost this so it doesn't clip the accordion */
+  }
+
+  /* 2. Force the dropdown to stay in the normal document flow on mobile */
+  .mobile-menu .dropdown-menu {
+    position: relative; /* Overrides position: absolute */
+    top: 0;
+    box-shadow: none;   /* Removes the desktop floating shadow */
+    padding-left: 15px; /* Indents it so it looks like a sub-menu */
+  }
+  
 }
 </style>
 
