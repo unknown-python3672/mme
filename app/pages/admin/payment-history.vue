@@ -278,7 +278,7 @@ onMounted(() => {
 
 <style scoped>
 .payment-history {
-  padding: 24px;
+  padding: 40px 24px 24px;
   max-width: 1200px;
   margin: 0 auto;
   font-family: 'Montserrat', sans-serif;
@@ -581,7 +581,7 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .payment-history {
-    padding: 16px;
+    padding: 40px 16px 16px;
   }
 
   .stats-row {

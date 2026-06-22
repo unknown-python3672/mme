@@ -35,8 +35,19 @@
     <div class="mobile-menu" :class="{ open: isOpen }">
       <nuxt-link to="/MME" @click="isOpen = false">Home</nuxt-link>
       <nuxt-link to="/AboutUs" @click="isOpen = false">About Us</nuxt-link>
-      <nuxt-link v-if="user?.role === 'Admin'" to="/admin/get-users" @click="isOpen = false">Admin</nuxt-link>
-      <button @click="openPaymentModal(); isOpen = false">Purchase</button>
+        <div v-if="user?.role === 'Admin'"
+         class="dropdown" 
+         @mouseenter="open = true"
+          @mouseleave="open = false">
+          <button class="mobile-drop"> Admin ▼ </button>
+          <Transition name="dropdown">
+        <ul v-if="open" class="dropdown-menu">
+          <li><nuxt-link to="/admin/get-users">Get Users</nuxt-link></li>
+          <li><nuxt-link to="/admin/payment-history">Payment History</nuxt-link></li>
+        </ul>
+          </Transition>
+      </div>
+      <button class="mobile-purchase" @click="openPaymentModal(); isOpen = false">Purchase</button>
     </div>
   </nav>
 </template>
@@ -213,7 +224,7 @@ a {
   font-family: 'Montserrat', sans-serif;
 }
 
-.mobile-menu button {
+.mobile-purchase {
   margin-top: 12px;
   width: 100%;
   padding: 10px;
@@ -225,9 +236,27 @@ a {
   font-size: 15px;
 }
 
+.mobile-drop{
+  background: none;
+  color: black;
+  border:none;
+  padding: 10px 0;
+    font-size: 16px;
+    width: 100%;
+    border-bottom: 1px solid #f0f0f0;
+    color: black;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+}
+
 @media (max-width: 600px) {
   .center-links {
     display: none;       
+  }
+
+  .dropdown-toggle{  cursor: pointer;
+  background: none;
+  border: none;
   }
 
   .purchase-btn {
