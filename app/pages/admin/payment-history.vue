@@ -36,20 +36,20 @@
       </div>
 
       <div class="date-range">
-        <input
-          type="date"
-          v-model="fromDate"
-          class="date-input"
-          placeholder="From"
-        />
+        <input type="date" v-model="fromDate" class="date-input" />
         <span>to</span>
-        <input
-          type="date"
-          v-model="toDate"
-          class="date-input"
-          placeholder="To"
-        />
+        <input type="date" v-model="toDate" class="date-input" />
         <button class="filter-btn active" @click="applyDateRange">Apply</button>
+      </div>
+
+      <!-- ✅ Book filter dropdown -->
+      <div class="book-filter">
+        <select v-model="selectedBook" class="date-input" @change="applyBookFilter">
+          <option value="">All Textbooks</option>
+          <option v-for="book in availableBooks" :key="book" :value="book">
+            {{ book }}
+          </option>
+        </select>
       </div>
     </div>
 
@@ -90,6 +90,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Amount</th>
+            <th>Books Bought</th>
             <th>Reference</th>
             <th>Status</th>
             <th>Date</th>
@@ -114,6 +115,21 @@
             <td>{{ payment.email }}</td>
             <td>{{ payment.phone }}</td>
             <td>₦{{ payment.totalAmount?.toLocaleString() }}</td>
+
+            <!-- ✅ Books Bought column -->
+            <td>
+              <span
+                v-for="book in parseBooksJson(payment.booksJson)"
+                :key="book.title"
+                class="book-badge"
+              >
+                {{ book.title }}
+              </span>
+              <span v-if="!parseBooksJson(payment.booksJson).length" class="text-gray">
+                —
+              </span>
+            </td>
+
             <td class="ref">{{ payment.reference }}</td>
             <td>
               <span class="status-badge" :class="payment.status">
@@ -146,7 +162,7 @@
 import { ref, computed, onMounted } from 'vue'
 
 definePageMeta({
-  middleware: 'admin-only'  // ✅ Only admins can access
+  middleware: 'admin-only'
 })
 
 const config = useRuntimeConfig()
@@ -159,6 +175,7 @@ const deleting = ref(false)
 const activeFilter = ref('all')
 const fromDate = ref('')
 const toDate = ref('')
+const selectedBook = ref('')
 
 const quickFilters = [
   { label: 'All', value: 'all' },
@@ -166,24 +183,20 @@ const quickFilters = [
   { label: 'Last 30 Days', value: '30days' }
 ]
 
-// ✅ Get admin token from cookie
 const getAuthHeader = () => {
   const token = useCookie('token')
   return { Authorization: `Bearer ${token.value}` }
 }
 
-// ✅ Total revenue
 const totalRevenue = computed(() =>
   payments.value.reduce((sum, p) => sum + (p.totalAmount || 0), 0)
 )
 
-// ✅ Check if all selected
 const allSelected = computed(() =>
   payments.value.length > 0 &&
   selectedIds.value.length === payments.value.length
 )
 
-// ✅ Toggle select all
 const toggleSelectAll = (e) => {
   if (e.target.checked) {
     selectedIds.value = payments.value.map(p => p.id)
@@ -192,7 +205,6 @@ const toggleSelectAll = (e) => {
   }
 }
 
-// ✅ Format date
 const formatDate = (dateStr) => {
   if (!dateStr) return '—'
   return new Date(dateStr).toLocaleDateString('en-NG', {
@@ -204,7 +216,27 @@ const formatDate = (dateStr) => {
   })
 }
 
-// ✅ Fetch all payments
+// ✅ Parse booksJson string into array
+const parseBooksJson = (booksJson) => {
+  if (!booksJson) return []
+  try {
+    return JSON.parse(booksJson)
+  } catch (e) {
+    return []
+  }
+}
+
+// ✅ Get all unique book titles from loaded payments
+const availableBooks = computed(() => {
+  const titles = new Set()
+  payments.value.forEach(p => {
+    parseBooksJson(p.booksJson).forEach(b => {
+      if (b.title) titles.add(b.title)
+    })
+  })
+  return Array.from(titles).sort()
+})
+
 const fetchPayments = async (url) => {
   loading.value = true
   error.value = null
@@ -222,32 +254,42 @@ const fetchPayments = async (url) => {
   }
 }
 
-// ✅ Quick filters
 const applyQuickFilter = (filter) => {
   activeFilter.value = filter
+  selectedBook.value = '' // ← reset book filter
   const base = `${config.public.apiUrl}/api/v1/admin/payments`
   if (filter === 'all') fetchPayments(`${base}`)
   else if (filter === '7days') fetchPayments(`${base}/last7days`)
   else if (filter === '30days') fetchPayments(`${base}/last30days`)
 }
 
-// ✅ Date range filter
 const applyDateRange = () => {
   if (!fromDate.value || !toDate.value) {
     alert('Please select both from and to dates')
     return
   }
   activeFilter.value = 'custom'
+  selectedBook.value = '' // ← reset book filter
   const base = `${config.public.apiUrl}/api/v1/admin/payments`
   fetchPayments(`${base}/filter?from=${fromDate.value}&to=${toDate.value}`)
 }
 
-// ✅ Confirm delete
+// ✅ Filter by book title
+const applyBookFilter = () => {
+  if (!selectedBook.value) {
+    fetchPayments(`${config.public.apiUrl}/api/v1/admin/payments`)
+    return
+  }
+  activeFilter.value = ''
+  fetchPayments(
+    `${config.public.apiUrl}/api/v1/admin/payments/by-book?title=${encodeURIComponent(selectedBook.value)}`
+  )
+}
+
 const confirmDelete = () => {
   showConfirm.value = true
 }
 
-// ✅ Delete selected payments
 const deleteSelected = async () => {
   deleting.value = true
   try {
@@ -260,7 +302,6 @@ const deleteSelected = async () => {
       credentials: 'include',
       body: { ids: selectedIds.value }
     })
-    // Remove deleted from list
     payments.value = payments.value.filter(p => !selectedIds.value.includes(p.id))
     selectedIds.value = []
     showConfirm.value = false
@@ -358,6 +399,20 @@ onMounted(() => {
 .date-range span {
   font-size: 13px;
   color: #666;
+}
+
+.book-filter select {
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  min-width: 160px;
+}
+
+.book-filter select:focus {
+  border-color: #007BFF;
 }
 
 .date-input {
@@ -513,6 +568,22 @@ onMounted(() => {
 .status-badge.failed {
   background: #fee2e2;
   color: #991b1b;
+}
+
+/* ✅ Book badge */
+.book-badge {
+  display: inline-block;
+  background: #e8f0fe;
+  color: #1a56db;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  margin: 2px;
+  white-space: nowrap;
+}
+
+.text-gray {
+  color: #999;
 }
 
 .confirm-overlay {
